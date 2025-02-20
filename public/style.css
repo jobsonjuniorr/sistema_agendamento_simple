@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 100%;
+    margin: 20px auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+form{
+    width: 70%;
+}
+.form{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+}
+.form input{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    padding: 10px;
+    margin-top: 1rem;
+}
+
+
+.button-agendar {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    width: 25%;
+    margin: auto;
+    margin-top: 1rem;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    width: 60%;
+}
+
+li {
+    background: #f4f4f4;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+button:nth-child(2) {
+    background-color: #007bff; 
+    color: white;
+}
+
+button:nth-child(3) {
+    background-color: #dc3545;
+    color: white;
+}
+
+button:nth-child(4) {
+    background-color: #6c757d; 
+    color: white;
+}
+
