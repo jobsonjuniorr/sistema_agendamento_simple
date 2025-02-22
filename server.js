@@ -2,7 +2,7 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 require("dotenv").config();
-
+const bcrypt = require("bcrypt")
 const app = express();
 
 // Middleware
@@ -73,6 +73,49 @@ app.put("/api/agendamentos/:id", (req, res) => {
             res.status(500).json({ erro: err.message });
         } else {
             res.json({ mensagem: "Status atualizado com sucesso!" });
+        }
+    });
+});
+
+app.post("/api/cadastro", async (req, res) => {
+    try {
+        const { nome, email, senha } = req.body;
+        const senhaCriptografada = await bcrypt.hash(senha, 10);
+
+        const sql = "INSERT INTO cadastro (nome, email, senha) VALUES (?, ?, ?)";
+        db.query(sql, [nome, email, senhaCriptografada], (err, result) => {
+            if (err) {
+                console.error("Erro ao cadastrar:", err);
+                return res.status(500).json({ message: "Erro ao cadastrar usuário" });
+            }
+
+            res.status(201).json({ message: "Cadastro bem-sucedido" });
+        });
+    } catch (error) {
+        console.error("Erro no servidor:", error);
+        res.status(500).json({ message: "Erro interno no servidor" });
+    }
+});
+
+
+app.post("/api/login", (req, res) => {
+    const { email, senha } = req.body;
+
+    const sql = "SELECT * FROM cadastro WHERE email = ?";
+    db.query(sql, [email], async (err, results) => {
+        if (err) {
+            res.status(500).json({ erro: err.message });
+        } else if (results.length === 0) {
+            res.status(401).json({ erro: "E-mail não encontrado!" });
+        } else {
+            const usuario = results[0];
+            const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+
+            if (senhaCorreta) {
+                res.status(200).json({ mensagem: "Login bem-sucedido", usuario });
+            } else {
+                res.status(401).json({ erro: "Senha incorreta!" });
+            }
         }
     });
 });

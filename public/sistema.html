@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <h1>Agendamentos</h1>
+
+    <form id="form-agendamento" >
+       <div class="form">
+        <input type="text" id="nome" placeholder="Nome" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="tel" id="telefone" placeholder="Telefone" required>
+        <input type="datetime-local" id="data" required>
+        <button class="button-agendar" type="submit">Agendar</button>
+       </div>
+    </form>
+
+    <h2>Lista de Agendamentos</h2>
+    <ul id="lista-agendamentos"></ul>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
