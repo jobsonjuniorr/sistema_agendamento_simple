@@ -1,16 +1,29 @@
-const express = require("express");
-const mysql = require("mysql2");
-const cors = require("cors");
-require("dotenv").config();
-const bcrypt = require("bcrypt")
+import express from "express";
+import mysql from "mysql2";
+import cors from "cors";
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import session from "express-session";
+import verificarLogin from "./middleware/verificarLogin.js"; 
+
+
+dotenv.config();
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cors());
-app.use(express.static("public")); // Servir arquivos HTML, CSS e JS
+app.use(express.static("public")); 
+app.use(session({
+    secret:"12912991929219",
+    resave:"false",
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 1000 * 60 * 60 }
+}))
 
-// Conexão com o Banco de Dados MySQL
+app.get("/sistema.html", verificarLogin, (req, res) => {
+    res.sendFile(__dirname + "/sistema.html");
+});
+
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -26,8 +39,8 @@ db.connect((err) => {
     }
 });
 
-// Rota para criar um agendamento
-app.post("/api/agendamentos", (req, res) => {
+
+app.post("/api/agendamentos", verificarLogin,(req,res) => {
     const { nome, email, telefone, data } = req.body;
     const sql = "INSERT INTO agendamentos (nome, email, telefone, data) VALUES (?, ?, ?, ?)";
     db.query(sql, [nome, email, telefone, data], (err, result) => {
@@ -39,8 +52,8 @@ app.post("/api/agendamentos", (req, res) => {
     });
 });
 
-// Rota para listar agendamentos
-app.get("/api/agendamentos", (req, res) => {
+
+app.get("/api/agendamentos", verificarLogin, (req, res) => {
     const sql = "SELECT * FROM agendamentos ORDER BY data ASC";
     db.query(sql, (err, results) => {
         if (err) {
@@ -52,7 +65,7 @@ app.get("/api/agendamentos", (req, res) => {
 });
 
 // Rota para deletar um agendamento
-app.delete("/api/agendamentos/:id", (req, res) => {
+app.delete("/api/agendamentos/:id",verificarLogin, (req, res) => {
     const sql = "DELETE FROM agendamentos WHERE id = ?";
     db.query(sql, [req.params.id], (err) => {
         if (err) {
@@ -64,7 +77,7 @@ app.delete("/api/agendamentos/:id", (req, res) => {
 });
 
 
-app.put("/api/agendamentos/:id", (req, res) => {
+app.put("/api/agendamentos/:id", verificarLogin, (req, res) => {
     const { status } = req.body; 
     const sql = "UPDATE agendamentos SET status = ? WHERE id = ?";
     
@@ -112,11 +125,29 @@ app.post("/api/login", (req, res) => {
             const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
 
             if (senhaCorreta) {
-                res.status(200).json({ mensagem: "Login bem-sucedido", usuario });
+                req.session.user = { id: usuario.id, nome: usuario.nome, email: usuario.email }; // Armazena os dados do usuário
+                res.status(200).json({ mensagem: "Login bem-sucedido", usuario: req.session.user });
             } else {
                 res.status(401).json({ erro: "Senha incorreta!" });
             }
         }
+    });
+});
+app.get("/api/status", (req, res) => {
+    if (req.session.user) {
+        res.json({ logado: true, usuario: req.session.user });
+    } else {
+        res.json({ logado: false });
+    }
+});
+
+app.post("/api/logout", (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ erro: "Erro ao encerrar a sessão." });
+        }
+        res.clearCookie("connect.sid");
+        res.json({ mensagem: "Logout realizado com sucesso!" });
     });
 });
 

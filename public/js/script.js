@@ -58,3 +58,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     carregarAgendamentos();
 });
+document.getElementById("logout-btn").addEventListener("click", () => {
+    fetch("/api/logout", { method: "POST" })
+        .then((res) => res.json())
+        .then(() => {
+            window.location.href = "/login.html"; 
+        })
+        .catch((err) => console.error("Erro ao fazer logout:", err));
+});
+fetch("/api/status")
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Erro ao verificar sessão');
+        }
+        return res.json(); 
+    })
+    .then(data => {
+        if (!data.logado) {
+            window.location.href = "/login.html"; 
+        }
+    })
+    .catch(err => {
+        console.error("Erro ao verificar sessão:", err);
+        window.location.href = "/login.html";
+    });
