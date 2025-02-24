@@ -42,13 +42,26 @@ db.connect((err) => {
 
 
 app.post("/api/agendamentos", verificarLogin,(req,res) => {
-    const { nome, email, telefone, data,servico } = req.body;
-    const sql = "INSERT INTO agendamentos (nome, email, telefone, data, servico) VALUES (?, ?, ?, ?, ?)";
-    db.query(sql, [nome, email, telefone, data,servico], (err, result) => {
+    const { nome,telefone, data,servico, valor } = req.body;
+    const sql = "INSERT INTO agendamentos (nome,telefone, data, servico,valor) VALUES (?, ?, ?, ?, ?)";
+    db.query(sql, [nome,telefone, data,servico,valor], (err, result) => {
         if (err) {
             res.status(500).json({ erro: err.message });
         } else {
-            res.status(201).json({ id: result.insertId, nome, email, telefone, data,servico });
+            res.status(201).json({ id: result.insertId, nome, telefone, data,servico, valor});
+        }
+    });
+});
+app.get("/api/agendamentoshoje", (req, res) => {
+    const hoje = new Date().toISOString().split("T")[0];
+
+    const sql = "SELECT id, nome, telefone, data, servico, valor, status FROM agendamentos WHERE DATE(data) = ?";
+    
+    db.query(sql, [hoje], (err, results) => {
+        if (err) {
+            res.status(500).json({ erro: err.message });
+        } else {
+            res.json(results);
         }
     });
 });
@@ -168,6 +181,23 @@ app.get("/api/graficos", verificarLogin, (req, res) => {
         }
     });
 });
+app.get("/api/total-mensal", verificarLogin, (req, res) => {
+    const sql = `
+        SELECT SUM(valor) AS total
+        FROM agendamentos
+        WHERE MONTH(data) = MONTH(CURRENT_DATE()) 
+        AND YEAR(data) = YEAR(CURRENT_DATE())
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            res.status(500).json({ erro: err.message });
+        } else {
+            res.json({ total: results[0].total || 0 });
+        }
+    });
+});
+
 
 
 const PORT = process.env.PORT || 5000;

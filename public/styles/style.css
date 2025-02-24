@@ -70,19 +70,3 @@ button {
 button:hover {
     opacity: 0.8;
 }
-
-button:nth-child(2) {
-    background-color: #007bff; 
-    color: white;
-}
-
-button:nth-child(3) {
-    background-color: #dc3545;
-    color: white;
-}
-
-button:nth-child(4) {
-    background-color: #6c757d; 
-    color: white;
-}
-
