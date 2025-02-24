@@ -1,13 +1,13 @@
 import express from "express";
-import mysql from "mysql2";
+import db from "./db/db.js"
 import cors from "cors";
-import dotenv from "dotenv";
+
 import bcrypt from "bcrypt";
 import session from "express-session";
 import verificarLogin from "./middleware/verificarLogin.js"; 
 
 
-dotenv.config();
+
 const app = express();
 
 app.use(express.json());
@@ -24,23 +24,6 @@ app.get("/sistema.html", verificarLogin, (req, res) => {
     res.sendFile(__dirname + "/sistema.html");
 });
 
-
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error("Erro ao conectar no MySQL:", err);
-    } else {
-        console.log("Conectado ao MySQL!");
-    }
-});
-
-
 app.post("/api/agendamentos", verificarLogin,(req,res) => {
     const { nome,telefone, data,servico, valor } = req.body;
     const sql = "INSERT INTO agendamentos (nome,telefone, data, servico,valor) VALUES (?, ?, ?, ?, ?)";
@@ -55,7 +38,7 @@ app.post("/api/agendamentos", verificarLogin,(req,res) => {
 app.get("/api/agendamentoshoje", (req, res) => {
     const hoje = new Date().toISOString().split("T")[0];
 
-    const sql = "SELECT id, nome, telefone, data, servico, valor, status FROM agendamentos WHERE DATE(data) = ?";
+    const sql = "SELECT id, nome, telefone, data, servico, valor FROM agendamentos WHERE DATE(data) = ?";
     
     db.query(sql, [hoje], (err, results) => {
         if (err) {
@@ -167,10 +150,10 @@ app.post("/api/logout", (req, res) => {
 
 app.get("/api/graficos", verificarLogin, (req, res) => {
     const sql = `
-        SELECT DATE(data) as data, COUNT(*) as total
+        SELECT DATE_FORMAT(data, '%Y-%m') as mes, COUNT(*) as total
         FROM agendamentos
-        GROUP BY DATE(data)
-        ORDER BY DATE(data) ASC
+        GROUP BY DATE_FORMAT(data, '%Y-%m')
+        ORDER BY DATE_FORMAT(data, '%Y-%m') ASC
     `;
 
     db.query(sql, (err, results) => {
@@ -181,6 +164,7 @@ app.get("/api/graficos", verificarLogin, (req, res) => {
         }
     });
 });
+
 app.get("/api/total-mensal", verificarLogin, (req, res) => {
     const sql = `
         SELECT SUM(valor) AS total

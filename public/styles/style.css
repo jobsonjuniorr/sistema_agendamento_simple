@@ -1,7 +1,19 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+:root{
+    --button: #28a745;
+    --buttonHover:#218838;
+    --textButton:#ffff;
+    --buttonDelete:#fa2323;
+    --buttonDeleteHover:#fa2323c7;
+}
+
 body {
     font-family: Arial, sans-serif;
     max-width: 100%;
-    margin: 20px auto;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -26,10 +38,18 @@ form{
     padding: 10px;
     margin-top: 1rem;
 }
+.header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f4f4f4;
+    padding: 10px;
+}
 
 
 .button-agendar {
-    background-color: #28a745;
+    background-color: var(--button);
     color: white;
     border: none;
     cursor: pointer;
@@ -38,9 +58,23 @@ form{
     margin: auto;
     margin-top: 1rem;
 }
-
+.button-agendar{
+    background-color: var(--buttonHover) !important;
+}
+.button-header{
+    width: 100px;
+    background-color: var(--button);
+    color: var(--textButton);
+}
+.button-header:hover{
+    background-color: var(--buttonHover);
+}
+button{
+    background-color: var(--buttonDelete);
+    color: #fff;
+}
 button:hover {
-    background-color: #218838;
+    background-color: var(--buttonDeleteHover);
 }
 
 ul {
@@ -69,4 +103,22 @@ button {
 
 button:hover {
     opacity: 0.8;
+}
+@media (max-width: 480px) {
+    form, ul {
+        width: 95%;
+    }
+
+    .button-agendar {
+        width: 100%;
+    }
+
+    li {
+        font-size: 14px;
+    }
+
+    .buttons-container {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

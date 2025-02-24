@@ -8,16 +8,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function renderizarGrafico(dados) {
-    const dadosFormatados = dados.map(item =>{
-        const data = new Date(item.data)
-        return data.toLocaleDateString("pt-BR",{
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        })
-    })
-  
-    const valores = dados.map(item => item.total); 
+    const dadosFormatados = dados.map(item => {
+        const [ano, mes] = item.mes.split("-");
+        return `${mes}/${ano}`; // Exemplo: "08/2024"
+    });
+
+    const valores = dados.map(item => item.total);
 
     const ctx = document.getElementById("graficoAgendamentos").getContext("2d");
     new Chart(ctx, {
@@ -25,7 +21,7 @@ function renderizarGrafico(dados) {
         data: {
             labels: dadosFormatados,
             datasets: [{
-                label: "Agendamentos por Data",
+                label: "Agendamentos por Mês",
                 data: valores,
                 backgroundColor: "rgba(75, 192, 192, 0.2)",
                 borderColor: "rgba(75, 192, 192, 1)",
@@ -42,7 +38,6 @@ function renderizarGrafico(dados) {
         }
     });
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
     fetch("http://localhost:5000/api/total-mensal")
