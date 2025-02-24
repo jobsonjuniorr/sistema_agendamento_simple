@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     fetch("http://localhost:5000/api/graficos")
         .then(response => response.json())
@@ -46,4 +47,25 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("totalMensal").textContent = `R$ ${data.total}`;
         })
         .catch(error => console.error("Erro ao carregar o total do mês:", error));
+
+    fetch("http://localhost:5000/api/agendamentos")
+        .then(response=> response.json())
+        .then(data=>{
+            mostrarUltimosAgendamentos(data)
+        })
+        .catch(error => console.error("Erro ao carregar os agendamentos:", error));
 });
+
+
+function mostrarUltimosAgendamentos(agendamento){
+    const lista = document.getElementById("listaAgendamentos")
+    lista.innerHTML = "";
+
+    const ultimos = agendamento.slice(-5).reverse()
+    
+    ultimos.forEach(agendamento=>{
+        const item = document.createElement("li")
+        item.textContent = `${agendamento.nome} - ${agendamento.servico}`;
+        lista.appendChild(item)
+    })
+}
