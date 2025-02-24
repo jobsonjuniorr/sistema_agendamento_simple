@@ -24,6 +24,7 @@ app.get("/sistema.html", verificarLogin, (req, res) => {
     res.sendFile(__dirname + "/sistema.html");
 });
 
+
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -41,13 +42,13 @@ db.connect((err) => {
 
 
 app.post("/api/agendamentos", verificarLogin,(req,res) => {
-    const { nome, email, telefone, data } = req.body;
-    const sql = "INSERT INTO agendamentos (nome, email, telefone, data) VALUES (?, ?, ?, ?)";
-    db.query(sql, [nome, email, telefone, data], (err, result) => {
+    const { nome, email, telefone, data,servico } = req.body;
+    const sql = "INSERT INTO agendamentos (nome, email, telefone, data, servico) VALUES (?, ?, ?, ?, ?)";
+    db.query(sql, [nome, email, telefone, data,servico], (err, result) => {
         if (err) {
             res.status(500).json({ erro: err.message });
         } else {
-            res.status(201).json({ id: result.insertId, nome, email, telefone, data });
+            res.status(201).json({ id: result.insertId, nome, email, telefone, data,servico });
         }
     });
 });
@@ -150,6 +151,24 @@ app.post("/api/logout", (req, res) => {
         res.json({ mensagem: "Logout realizado com sucesso!" });
     });
 });
+
+app.get("/api/graficos", verificarLogin, (req, res) => {
+    const sql = `
+        SELECT DATE(data) as data, COUNT(*) as total
+        FROM agendamentos
+        GROUP BY DATE(data)
+        ORDER BY DATE(data) ASC
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            res.status(500).json({ erro: err.message });
+        } else {
+            res.json(results);
+        }
+    });
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

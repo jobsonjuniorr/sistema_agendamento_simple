@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             email: document.getElementById("email").value,
             telefone: document.getElementById("telefone").value,
             data: document.getElementById("data").value,
+            servico: document.getElementById("servico").value,
         };
 
         fetch("/api/agendamentos", {
@@ -62,7 +63,7 @@ document.getElementById("logout-btn").addEventListener("click", () => {
     fetch("/api/logout", { method: "POST" })
         .then((res) => res.json())
         .then(() => {
-            window.location.href = "/login.html"; 
+            window.location.href = "/index.html"; 
         })
         .catch((err) => console.error("Erro ao fazer logout:", err));
 });
@@ -75,10 +76,10 @@ fetch("/api/status")
     })
     .then(data => {
         if (!data.logado) {
-            window.location.href = "/login.html"; 
+            window.location.href = "/index.html"; 
         }
     })
     .catch(err => {
         console.error("Erro ao verificar sessão:", err);
-        window.location.href = "/login.html";
+        window.location.href = "/index.html";
     });
