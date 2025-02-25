@@ -13,10 +13,23 @@
         <h1>Agendamentos</h1>
     </div>
     <div class="header-box-right">
-    <button class="button-header"   id="logout-btn">Sair</button>
-    <a href="dashbord.html"><button class="button-header" >Dashbord</button></a>
+    <button class="button-menu " id="button-menu"><img class="img-button" src="image/menu.png" alt="Icone-menu"></button>
+    <button class="button-header buton-closed logout-btn" >Sair</button>
+
+    <a href="dashbord.html"><button class="button-header buton-closed" >Dashbord</button></a>
+    
     </div>
     </div>
+    
+    <nav id="menu-lateral" class="menu-lateral">
+        <button class="fechar-menu" id="fechar-menu">&times;</button>
+        <ul>
+            <li><button class="button-menu-lateral"><a href="dashbord.html">Dashboard</a></button></li>
+            <li><button class="logout-btn button-menu-lateral"><a href="">Sair</a></button></li>
+        </ul>
+    </nav>
+    
+    <div id="overlay" class="overlay"></div>
 
     <form id="form-agendamento" >
        <div class="form">

@@ -9,6 +9,8 @@
     --textButton:#ffff;
     --buttonDelete:#fa2323;
     --buttonDeleteHover:#fa2323c7;
+    --cardMenu: #f4f4f4;
+    --text:#000;
 }
 
 body {
@@ -46,7 +48,22 @@ form{
     background-color: #f4f4f4;
     padding: 10px;
 }
-
+.header-box-right{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.img-button{
+    width: 30px;
+    height: 30px;
+}
+.button-menu{
+    background-color: transparent;
+    display: none;
+}
+.button-menu:hover{
+    background-color: transparent;
+}
 
 .button-agendar {
     background-color: var(--button);
@@ -120,5 +137,93 @@ button:hover {
     .buttons-container {
         flex-direction: column;
         gap: 10px;
+    }
+}
+
+.menu-lateral {
+    position: fixed;
+    top: 0;
+    left: -250px; 
+    width: 250px;
+    height: 100%;
+    background-color:var(--cardMenu);
+    color: var(--text);
+    padding-top: 60px;
+    transition: 0.3s;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000; 
+}
+
+.menu-lateral ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-lateral ul li {
+    padding: 15px;
+}
+
+.menu-lateral ul li a {
+    text-decoration: none;
+    padding: 10px;
+    text-align: center;
+    color: var(--textButton);
+}
+.button-menu-lateral{
+    padding: 10px;
+    background-color: var(--button);
+    color: var(--textButton);
+    width: 100%;
+}
+.button-menu-lateral:hover{
+    background-color: var(--buttonHover);
+}
+
+.fechar-menu {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: var(--buttonDelete);
+    cursor: pointer;
+    width: 60px;
+}
+.fechar-menu:hover{
+    color: var(--buttonDeleteHover);
+}
+.menu-lateral.ativo {
+    left: 0;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 500; 
+}
+
+
+.overlay.ativo {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .button-menu {
+        display: block !important; 
+    }
+
+    .header-box-right {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .buton-closed{
+        display: none;
     }
 }

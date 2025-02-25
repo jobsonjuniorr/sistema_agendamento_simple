@@ -52,14 +52,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     carregarAgendamentos();
 });
-document.getElementById("logout-btn").addEventListener("click", () => {
-    fetch("/api/logout", { method: "POST" })
-        .then((res) => res.json())
-        .then(() => {
-            window.location.href = "/index.html"; 
-        })
-        .catch((err) => console.error("Erro ao fazer logout:", err));
+document.querySelectorAll(".logout-btn").forEach(button => {
+    button.addEventListener("click", () => {
+        fetch("/api/logout", { method: "POST" })
+            .then((res) => res.json())
+            .then(() => {
+                window.location.href = "/index.html"; 
+            })
+            .catch((err) => console.error("Erro ao fazer logout:", err));
+    });
 });
+
 fetch("/api/status")
     .then(res => {
         if (!res.ok) {
@@ -76,3 +79,26 @@ fetch("/api/status")
         console.error("Erro ao verificar sessão:", err);
         window.location.href = "/index.html";
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const menuLateral = document.getElementById("menu-lateral");
+        const overlay = document.getElementById("overlay");
+        const abrirMenu = document.getElementById("button-menu");
+        const fecharMenu = document.getElementById("fechar-menu");
+    
+        abrirMenu.addEventListener("click", function () {
+            menuLateral.classList.add("ativo");
+            overlay.classList.add("ativo");
+        });
+    
+        fecharMenu.addEventListener("click", function () {
+            menuLateral.classList.remove("ativo");
+            overlay.classList.remove("ativo");
+        });
+    
+        overlay.addEventListener("click", function () {
+            menuLateral.classList.remove("ativo");
+            overlay.classList.remove("ativo");
+        });
+    });
+    
